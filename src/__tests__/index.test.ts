@@ -1,13 +1,8 @@
-import { sayHello } from '../index'
+import * as index from '../index'
+import { SecretsCache } from '../secrets-cache'
 
-describe('sayHello', () => {
-  it('returns the default greeting with no argument', () => {
-    const result = sayHello()
-    expect(result).toEqual('Hello, World')
-  })
-
-  it('returns the warm welcome for the specified name', () => {
-    const result = sayHello('Larry the Llama')
-    expect(result).toEqual('Hello, Larry the Llama')
+describe('index', () => {
+  it('exports SecretsCache', () => {
+    expect(index.SecretsCache).toEqual(SecretsCache)
   })
 })

@@ -14,5 +14,8 @@
     "parserOptions": {
         "ecmaVersion": 2018,
         "project": "./tsconfig.json"
+    },
+    "rules": {
+        "unicorn/prevent-abbreviations": 0
     }
 }
