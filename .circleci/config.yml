@@ -1,0 +1,105 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:dubnium
+
+commands:
+  restore_package_cache:
+    description: "Restore dependencies from the cache"
+    steps:
+      - restore_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+jobs:
+  install_dependencies:
+    executor: build_node
+    steps:
+      - checkout
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+      - restore_package_cache
+      - run: yarn install
+      - run:
+          name: Ensure tree is clean
+          command: |
+            set -e
+            test -z "$(git status --porcelain)"
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+  test:
+    <<: *defaults  
+    steps:
+      - checkout
+      - restore_package_cache
+      - run:
+          name: Run tests
+          command: yarn release
+      - run:
+          name: Report coverage
+          command: ./node_modules/.bin/codecov
+  build_js:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_package_cache
+      - run:
+          name: Run tests
+          command: yarn build
+      - run:
+          name: Report coverage
+          command: ./node_modules/.bin/codecov
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - dist
+            - package.json
+            - yarn.lock
+  npm_publish:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: echo yarn publish
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - install_dependencies:
+          context: global
+      - test:
+          context: global
+          requires:
+            - install_dependencies
+      - confirm_publish:
+          type: approval
+          requires:
+            - test
+          filters:
+            tags:
+              # Require a tag that matches a semantic version
+              # Acceptable examples: v10.0.0, v0.1.0-PRERELEASE
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
+            branches:
+              ignore: /.*/
+      - build_js:
+          context: global
+      - npm_publish:
+          requires:
+            - build_js
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/

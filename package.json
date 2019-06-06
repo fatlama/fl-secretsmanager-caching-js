@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "repository": "github.com/fatlama/fl-secretsmanager-caching-js",
   "author": "Fat Llama",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "devDependencies": {
     "@fatlama/eslint-config": "^1.0.6",
     "@types/jest": "^24.0.13",
