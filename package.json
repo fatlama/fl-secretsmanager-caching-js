@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "repository": "github.com/fatlama/fl-secretsmanager-caching-js",
   "author": "Fat Llama",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "devDependencies": {
     "@fatlama/eslint-config": "^1.0.6",
     "@types/jest": "^24.0.13",
@@ -14,6 +14,7 @@
     "@typescript-eslint/eslint-plugin": "^1.9.0",
     "@typescript-eslint/parser": "^1.9.0",
     "aws-sdk-mock": "^4.4.0",
+    "codecov": "^3.5.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.3.0",
     "eslint-config-standard": "^12.0.0",
@@ -29,7 +30,7 @@
     "jest": "^24.8.0",
     "prettier": "^1.17.1",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.5.0"
+    "typescript": "^3.4.5"
   },
   "files": [
     "dist/**/*"
