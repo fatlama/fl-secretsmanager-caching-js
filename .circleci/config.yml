@@ -18,6 +18,7 @@ commands:
 
 jobs:
   install_dependencies:
+    <<: *defaults  
     steps:
       - checkout
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
