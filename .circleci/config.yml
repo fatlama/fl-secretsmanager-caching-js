@@ -33,6 +33,14 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths:
             - node_modules
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_package_cache
+      - run:
+          name: Run lint
+          command: yarn lint
   test:
     <<: *defaults  
     steps:
@@ -40,7 +48,7 @@ jobs:
       - restore_package_cache
       - run:
           name: Run tests
-          command: yarn release
+          command: yarn test
       - run:
           name: Report coverage
           command: ./node_modules/.bin/codecov
@@ -78,6 +86,10 @@ workflows:
     jobs:
       - install_dependencies:
           context: global
+      - lint:
+          context: global
+          requires:
+            - install_depenencies
       - test:
           context: global
           requires:
@@ -86,6 +98,7 @@ workflows:
           type: approval
           requires:
             - test
+            - lint
           filters:
             tags:
               # Require a tag that matches a semantic version
