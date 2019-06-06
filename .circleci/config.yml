@@ -74,12 +74,13 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
+      - restore_package_cache
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
       - run:
           name: Publish package
-          command: echo yarn publish
+          command: yarn publish
 workflows:
   version: 2
   test-deploy:
@@ -104,17 +105,11 @@ workflows:
               # Require a tag that matches a semantic version
               # Acceptable examples: v10.0.0, v0.1.0-PRERELEASE
               only: /^v[0-9]+\.[0-9]+\.[0-9]+.*/
-            branches:
-              ignore: /.*/
       - build_js:
           context: global
           requires:
             - confirm_publish
       - npm_publish:
+          context: global
           requires:
             - build_js
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
