@@ -89,7 +89,7 @@ workflows:
       - lint:
           context: global
           requires:
-            - install_depenencies
+            - install_dependencies
       - test:
           context: global
           requires:
