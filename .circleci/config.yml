@@ -1,6 +1,6 @@
-# Javascript Node CircleCI 2.0 configuration file
+# Javascript Node CircleCI 2.1 configuration file
 #
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+# Check https://circleci.com/docs/2.1/language-javascript/ for more details
 #
 version: 2.1
 
@@ -95,6 +95,8 @@ workflows:
               ignore: /.*/
       - build_js:
           context: global
+          requires:
+            - confirm_publish
       - npm_publish:
           requires:
             - build_js
