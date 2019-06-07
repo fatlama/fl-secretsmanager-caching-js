@@ -3,8 +3,8 @@
         "es6": true
     },
     "extends": [
-        "@fatlama/eslint-config/base",
-        "@fatlama/eslint-config/typescript"
+        "@fatlama/base",
+        "@fatlama/typescript"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -14,8 +14,5 @@
     "parserOptions": {
         "ecmaVersion": 2018,
         "project": "./tsconfig.json"
-    },
-    "rules": {
-        "unicorn/prevent-abbreviations": 0
     }
 }
