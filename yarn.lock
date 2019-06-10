@@ -139,10 +139,27 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@fatlama/eslint-config@^1.0.6":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@fatlama/eslint-config/-/eslint-config-1.0.7.tgz#a201794ad0ae5da2bb2b08921bf938bbc4c83f28"
-  integrity sha512-Ge+MJzq7ptGptjhT6IES2tkKdDkVKLBlI/cAyHVLTblJiLM1x2W/ZRDOJi8ZWBDeVZjTR4cK65E7MDXZLVdAuw==
+"@fatlama/eslint-config-base@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@fatlama/eslint-config-base/-/eslint-config-base-1.0.0.tgz#812714cb693e4d3ce93ce7963e5d28aef4b218bc"
+  integrity sha512-2T5k2tW6TF5eG/NVXT3DixrmPzm1VjgSIn5Q9dVwAcarazFTXx9N/zXdpWlERireMHAouxVW8WctDX7h2oZXNw==
+  dependencies:
+    eslint-plugin-import ">= 2.16.0"
+    eslint-plugin-promise ">= 4.0.1"
+    eslint-plugin-standard ">= 4.0.0"
+    eslint-plugin-unicorn ">= 7.1.0"
+    prettier ">= 1.17.0"
+
+"@fatlama/eslint-config-typescript@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@fatlama/eslint-config-typescript/-/eslint-config-typescript-1.0.0.tgz#f8951d95a4a3035f175cd8de16a0a8aaad0db161"
+  integrity sha512-J18iZxqE/fBwzXZpJTRqOy/eVMMDbaDlOGeIvdqhreY3HDDJCOw493kmdob4D9UXCqiC/3sxDJCizUthF4EH/g==
+  dependencies:
+    "@typescript-eslint/eslint-plugin" "^1.9.0"
+    "@typescript-eslint/parser" "^1.9.0"
+    eslint-plugin-import ">= 2.16.0"
+    eslint-plugin-standard ">= 4.0.0"
+    prettier ">= 1.17.0"
 
 "@jest/console@^24.7.1":
   version "24.7.1"
@@ -1307,7 +1324,7 @@ eslint-plugin-eslint-comments@^3.1.1:
     escape-string-regexp "^1.0.5"
     ignore "^5.0.5"
 
-eslint-plugin-import@^2.17.3:
+"eslint-plugin-import@>= 2.16.0", eslint-plugin-import@^2.17.3:
   version "2.17.3"
   resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.17.3.tgz#00548b4434c18faebaba04b24ae6198f280de189"
   integrity sha512-qeVf/UwXFJbeyLbxuY8RgqDyEKCkqV7YC+E5S5uOjAp4tOc8zj01JP3ucoBM8JcEqd1qRasJSg6LLlisirfy0Q==
@@ -1343,7 +1360,7 @@ eslint-plugin-prettier@^3.1.0:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-eslint-plugin-promise@^4.1.1:
+"eslint-plugin-promise@>= 4.0.1", eslint-plugin-promise@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-promise/-/eslint-plugin-promise-4.1.1.tgz#1e08cb68b5b2cd8839f8d5864c796f56d82746db"
   integrity sha512-faAHw7uzlNPy7b45J1guyjazw28M+7gJokKUjC5JSFoYfUEyy6Gw/i7YQvmv2Yk00sUjWcmzXQLpU1Ki/C2IZQ==
@@ -1357,10 +1374,27 @@ eslint-plugin-ramda@^2.5.1:
     ramda "0.25.0"
     req-all "^1.0.0"
 
-eslint-plugin-standard@^4.0.0:
+"eslint-plugin-standard@>= 4.0.0", eslint-plugin-standard@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-standard/-/eslint-plugin-standard-4.0.0.tgz#f845b45109c99cd90e77796940a344546c8f6b5c"
   integrity sha512-OwxJkR6TQiYMmt1EsNRMe5qG3GsbjlcOhbGUBY4LtavF9DsLaTcoR+j2Tdjqi23oUwKNUqX7qcn5fPStafMdlA==
+
+"eslint-plugin-unicorn@>= 7.1.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-9.0.0.tgz#53e0a9043ad27f11f10846603915251d03584165"
+  integrity sha512-D0NbpmL6paSpwVrwdc/eePpp2KyPU9R+rEXKN+EjE8YqhELwF8wvixcpY5BenztzT2KZQiWWWyHfZmM9bTyRpA==
+  dependencies:
+    clean-regexp "^1.0.0"
+    eslint-ast-utils "^1.0.0"
+    import-modules "^1.1.0"
+    lodash.camelcase "^4.1.1"
+    lodash.defaultsdeep "^4.6.0"
+    lodash.kebabcase "^4.0.1"
+    lodash.snakecase "^4.0.1"
+    lodash.topairs "^4.3.0"
+    lodash.upperfirst "^4.2.0"
+    reserved-words "^0.1.2"
+    safe-regex "^2.0.1"
 
 eslint-plugin-unicorn@^8.0.2:
   version "8.0.2"
@@ -3514,6 +3548,11 @@ prettier-linter-helpers@^1.0.0:
   integrity sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==
   dependencies:
     fast-diff "^1.1.2"
+
+"prettier@>= 1.17.0":
+  version "1.18.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.18.1.tgz#2c79bdc97cbd457fc56e2f37c91cf076d69a8e07"
+  integrity sha512-cO2Lm9UuFJHhNgHSChbFddQEzNPP+sA6fX1tGmC0VNqTc2X+7EH0gpGWdEX0HfCe5+NVyOyyyWUpLKsb8LU5vg==
 
 prettier@^1.17.1:
   version "1.17.1"
