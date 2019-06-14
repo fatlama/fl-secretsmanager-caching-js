@@ -1,2 +1,4 @@
+import { CacheConfig } from './types'
 export { SecretsCache } from './secrets-cache'
-export { CacheConfig as SecretsCacheConfig } from './types'
+
+export type SecretsCacheOptions = Partial<CacheConfig>
