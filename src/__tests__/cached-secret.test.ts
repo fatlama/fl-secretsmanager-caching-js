@@ -124,4 +124,54 @@ describe('CachedSecret', () => {
     expect(describeSpy.mock.calls.length).toBeGreaterThan(1)
     expect(getSpy.mock.calls.length).toBeGreaterThan(1)
   })
+
+  it('respects force: true when fetching by versionId', async () => {
+    mockSecretsManager({
+      versions: exampleVersions,
+      versionResponse: exampleVersionResponse
+    })
+    const client = new SecretsManager()
+    const cache = new CachedSecret({
+      secretId: 'example',
+      client,
+      config: DEFAULT_CACHE_CONFIG
+    })
+
+    const getSpy = jest.spyOn(client, 'getSecretValue')
+
+    for (let i = 0; i < 3; i++) {
+      const response = await cache.getSecretValue({ versionId: exampleVersionId, force: true })
+
+      expect(response).toEqual(exampleVersionResponse)
+    }
+
+    expect(getSpy.mock.calls.length).toEqual(3)
+  })
+
+  it('respects force: true when fetching by versionStage', async () => {
+    mockSecretsManager({
+      versions: {
+        '01234567890123456789012345678901': ['NOTCURRENT']
+      },
+      versionResponse: exampleVersionResponse
+    })
+    const client = new SecretsManager()
+    const cache = new CachedSecret({
+      secretId: 'example',
+      client,
+      config: DEFAULT_CACHE_CONFIG
+    })
+
+    const describeSpy = jest.spyOn(client, 'describeSecret')
+    const getSpy = jest.spyOn(client, 'getSecretValue')
+
+    for (let i = 0; i < 3; i++) {
+      const response = await cache.getSecretValue({ versionStage: 'NOTCURRENT', force: true })
+
+      expect(response).toEqual(exampleVersionResponse)
+    }
+
+    expect(describeSpy.mock.calls.length).toEqual(3)
+    expect(getSpy.mock.calls.length).toEqual(3)
+  })
 })

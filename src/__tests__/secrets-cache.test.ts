@@ -100,4 +100,25 @@ describe('SecretsCache', () => {
     expect(describeSpy).toBeCalledTimes(1)
     expect(getSpy).toBeCalledTimes(1)
   })
+
+  it('ignores the cached values with force: true', async () => {
+    mockSecretsManager({
+      versions: exampleVersions,
+      versionResponse: exampleVersionResponse
+    })
+    const client = new SecretsManager()
+    const cache = new SecretsCache({ client })
+
+    const describeSpy = jest.spyOn(client, 'describeSecret')
+    const getSpy = jest.spyOn(client, 'getSecretValue')
+
+    for (let i = 0; i < 3; i++) {
+      const response = await cache.getSecretValue('mySecret', { force: true })
+
+      expect(response).toEqual(exampleVersionResponse)
+    }
+
+    expect(describeSpy).toBeCalledTimes(3)
+    expect(getSpy).toBeCalledTimes(3)
+  })
 })

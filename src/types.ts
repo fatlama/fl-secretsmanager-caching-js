@@ -5,7 +5,7 @@ export const AWSPREVIOUS = 'AWSPREVIOUS'
 export interface CacheConfig {
   maxCacheSize: number
   secretRefreshInterval: number
-  defaultVersionStage: 'AWSCURRENT'
+  defaultVersionStage: string
   // TODO implement retry/backoff logic
   exceptionRetryDelayBase: number
   exceptionRetryDelayMax: number

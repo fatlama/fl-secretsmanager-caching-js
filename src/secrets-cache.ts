@@ -4,15 +4,33 @@ import { GetSecretValueResponse } from 'aws-sdk/clients/secretsmanager'
 import { CachedSecret } from './cached-secret'
 import { CacheConfig, DEFAULT_CACHE_CONFIG } from './types'
 
-interface SecretsCacheOpts {
-  client: Pick<SecretsManager, 'describeSecret' | 'getSecretValue'>
-  config: CacheConfig
+export interface SecretsCacheOptions {
+  client?: Pick<SecretsManager, 'describeSecret' | 'getSecretValue'>
+  config?: Partial<CacheConfig>
 }
 
-interface GetSecretValueOpts {
-  versionId?: string
+interface BaseGetSecretValueOptions {
+  /**
+   * Force a cache miss and call AWS Secrets Manager to fetch the value. Defaults to false
+   */
+  force?: boolean
+}
+
+interface GetSecretValueByIdInput extends BaseGetSecretValueOptions {
+  /**
+   * Use the VersionId in AWS Secrets Manager. NOTE: takes precedence over VersionStage
+   */
+  versionId: string
+}
+
+interface GetSecretValueByStageOptions extends BaseGetSecretValueOptions {
+  /**
+   * Use the version mapped to VersionStage in AWS Secrets Manager. Defaults to AWSCURRENT
+   */
   versionStage?: string
 }
+
+export type GetSecretValueOptions = GetSecretValueByIdInput | GetSecretValueByStageOptions
 
 /**
  * Provides a read-only cache store for fetching secrets stored in AWS Secrets Manager
@@ -60,7 +78,7 @@ export class SecretsCache {
   private _cache: LRU<string, CachedSecret>
   private _config: CacheConfig
 
-  public constructor(opts: Partial<SecretsCacheOpts> = {}) {
+  public constructor(opts: SecretsCacheOptions = {}) {
     this._client = opts.client || new SecretsManager()
     this._config = { ...DEFAULT_CACHE_CONFIG, ...opts.config }
     this._cache = new LRU<string, CachedSecret>(this._config.maxCacheSize)
@@ -69,11 +87,11 @@ export class SecretsCache {
   /**
    * Uses the cached response for SecretsManager.GetSecretValue
    *
-   * @param request the request as you would normally use when calling SecretsManager.GetSecretValue
+   * @param secretId the name or ARN of the secret as expected by GetSecretValue.SecretId
    */
   public async getSecretValue(
     secretId: string,
-    opts: GetSecretValueOpts = {}
+    opts: GetSecretValueOptions = {}
   ): Promise<GetSecretValueResponse | null> {
     const existing = this._cache.get(secretId)
     if (existing) {

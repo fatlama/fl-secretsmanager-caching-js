@@ -16,6 +16,11 @@ interface CachedSecretArgs {
 interface GetSecretValueOpts {
   versionId?: string
   versionStage?: string
+  force?: boolean
+}
+
+interface InternalGetOpts {
+  force?: boolean
 }
 
 interface StringHashMap {
@@ -88,19 +93,25 @@ export class CachedSecret {
     if (versionId) {
       const version = await this._getVersionById(versionId)
 
-      return version.getSecretValue()
+      return version.getSecretValue(opts)
     }
 
-    const version = await this._getVersionForStage(versionStage || this._config.defaultVersionStage)
+    const version = await this._getVersionForStage(
+      versionStage || this._config.defaultVersionStage,
+      opts
+    )
     if (!version) {
       return null
     }
 
-    return version.getSecretValue()
+    return version.getSecretValue(opts)
   }
 
-  private async _getVersionForStage(versionStage: string): Promise<CachedSecretVersion | null> {
-    const versionId = await this._getVersionIdForStage(versionStage)
+  private async _getVersionForStage(
+    versionStage: string,
+    opts: InternalGetOpts = {}
+  ): Promise<CachedSecretVersion | null> {
+    const versionId = await this._getVersionIdForStage(versionStage, opts)
 
     if (!versionId) {
       return null
@@ -128,8 +139,11 @@ export class CachedSecret {
     return version
   }
 
-  private async _getVersionIdForStage(versionStage: string): Promise<string | null> {
-    if (Date.now() > this._nextRefreshTime) {
+  private async _getVersionIdForStage(
+    versionStage: string,
+    opts: InternalGetOpts = {}
+  ): Promise<string | null> {
+    if (opts.force || Date.now() > this._nextRefreshTime) {
       await this._refreshVersions()
     }
 
