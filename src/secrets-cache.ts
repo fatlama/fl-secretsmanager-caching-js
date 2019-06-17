@@ -7,12 +7,15 @@ import { CacheConfig, DEFAULT_CACHE_CONFIG } from './types'
 export interface SecretsCacheOptions {
   client?: Pick<SecretsManager, 'describeSecret' | 'getSecretValue'>
   config?: Partial<CacheConfig>
-  force?: boolean
 }
 
 interface GetSecretValueOpts {
   versionId?: string
   versionStage?: string
+  /**
+   * Force a cache miss and call AWS Secrets Manager to fetch the value. Defaults to false
+   */
+  force?: boolean
 }
 
 /**
@@ -70,7 +73,7 @@ export class SecretsCache {
   /**
    * Uses the cached response for SecretsManager.GetSecretValue
    *
-   * @param request the request as you would normally use when calling SecretsManager.GetSecretValue
+   * @param secretId the name or ARN of the secret as expected by GetSecretValue.SecretId
    */
   public async getSecretValue(
     secretId: string,
