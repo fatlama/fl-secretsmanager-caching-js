@@ -1,0 +1,14 @@
+## 1.1.0 (2019-06-17)
+
+General Changes
+
+* Feature: Allow `force: true` on requests to force a cache miss
+
+TypeScript Changes
+
+* Export SecretsCacheOptions
+* Export GetSecretValueOptions
+* Export CacheConfig
+* Fix: Allow a different default version stage in the CacheConfig
+* Fix: Update `SecretsCache.getSecretValue` JSDoc for clarity
+* Fix: Clarify allowed argument pairings in GetSecretValueOptions using a unary operator
