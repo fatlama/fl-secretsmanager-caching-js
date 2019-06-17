@@ -9,14 +9,28 @@ export interface SecretsCacheOptions {
   config?: Partial<CacheConfig>
 }
 
-interface GetSecretValueOpts {
-  versionId?: string
-  versionStage?: string
+interface BaseGetSecretValueOptions {
   /**
    * Force a cache miss and call AWS Secrets Manager to fetch the value. Defaults to false
    */
   force?: boolean
 }
+
+interface GetSecretValueByIdInput extends BaseGetSecretValueOptions {
+  /**
+   * Use the VersionId in AWS Secrets Manager. NOTE: takes precedence over VersionStage
+   */
+  versionId: string
+}
+
+interface GetSecretValueByStageOptions extends BaseGetSecretValueOptions {
+  /**
+   * Use the version mapped to VersionStage in AWS Secrets Manager. Defaults to AWSCURRENT
+   */
+  versionStage?: string
+}
+
+export type GetSecretValueOptions = GetSecretValueByIdInput | GetSecretValueByStageOptions
 
 /**
  * Provides a read-only cache store for fetching secrets stored in AWS Secrets Manager
@@ -77,7 +91,7 @@ export class SecretsCache {
    */
   public async getSecretValue(
     secretId: string,
-    opts: GetSecretValueOpts = {}
+    opts: GetSecretValueOptions = {}
   ): Promise<GetSecretValueResponse | null> {
     const existing = this._cache.get(secretId)
     if (existing) {
