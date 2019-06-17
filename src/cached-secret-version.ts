@@ -10,6 +10,10 @@ interface CachedSecretVersionArgs {
   versionId: string
 }
 
+interface GetSecretValueInput {
+  force?: boolean
+}
+
 /**
  * This is a cache for a particular VersionId of a secret
  *
@@ -37,8 +41,10 @@ export class CachedSecretVersion {
   /**
    * Checks the cache for a non-stale secret value and, failing that, fetches a new copy
    */
-  public async getSecretValue(): Promise<GetSecretValueResponse | null> {
-    if (Date.now() > this._nextRefreshTime) {
+  public async getSecretValue(
+    opts: GetSecretValueInput = {}
+  ): Promise<GetSecretValueResponse | null> {
+    if (opts.force || Date.now() > this._nextRefreshTime) {
       await this._refreshSecretValue()
     }
 

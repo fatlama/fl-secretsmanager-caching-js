@@ -4,9 +4,10 @@ import { GetSecretValueResponse } from 'aws-sdk/clients/secretsmanager'
 import { CachedSecret } from './cached-secret'
 import { CacheConfig, DEFAULT_CACHE_CONFIG } from './types'
 
-interface SecretsCacheOpts {
-  client: Pick<SecretsManager, 'describeSecret' | 'getSecretValue'>
-  config: CacheConfig
+export interface SecretsCacheOptions {
+  client?: Pick<SecretsManager, 'describeSecret' | 'getSecretValue'>
+  config?: Partial<CacheConfig>
+  force?: boolean
 }
 
 interface GetSecretValueOpts {
@@ -60,7 +61,7 @@ export class SecretsCache {
   private _cache: LRU<string, CachedSecret>
   private _config: CacheConfig
 
-  public constructor(opts: Partial<SecretsCacheOpts> = {}) {
+  public constructor(opts: SecretsCacheOptions = {}) {
     this._client = opts.client || new SecretsManager()
     this._config = { ...DEFAULT_CACHE_CONFIG, ...opts.config }
     this._cache = new LRU<string, CachedSecret>(this._config.maxCacheSize)
