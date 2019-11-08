@@ -163,21 +163,17 @@ export class CachedSecret {
 
     const versionIdsByStage: StringHashMap = {}
 
-    Object.keys(result.VersionIdsToStages).forEach(
-      (versionId): void => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const stages = result.VersionIdsToStages![versionId]
-        if (!stages) {
-          return
-        }
-
-        stages.forEach(
-          (stage): void => {
-            versionIdsByStage[stage] = versionId
-          }
-        )
+    Object.keys(result.VersionIdsToStages).forEach((versionId): void => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const stages = result.VersionIdsToStages![versionId]
+      if (!stages) {
+        return
       }
-    )
+
+      stages.forEach((stage): void => {
+        versionIdsByStage[stage] = versionId
+      })
+    })
 
     this._versionIdsByStage = versionIdsByStage
     this._resetRefreshTime()

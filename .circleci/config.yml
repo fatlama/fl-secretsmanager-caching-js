@@ -30,7 +30,7 @@ jobs:
             set -e
             test -z "$(git status --porcelain)"
       - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
   lint:
